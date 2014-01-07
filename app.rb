@@ -1,10 +1,7 @@
-require "elasticsearch"
 require "securerandom"
-require "pp"
-require "hashie"
 require "json"
-require "./event"
 require "faker"
+require "./event"
 
 module Model
   def self.included(base)
@@ -54,11 +51,3 @@ events = Event::Client.new :events
   event_name = %w[comment.create].sample
   events.write(event_name, c.to_h)
 end
-
-# client = Elasticsearch::Client.new log: false
-
-# client.index  index: 'myindex', type: c.class.name, id: c.id, body: c.to_h
-
-# resp = client.search index: 'myindex', type: 'Comment', body: { query: { match: { content: 'comment' } } }
-# hits = resp["hits"]["hits"].collect {|h| Hashie::Mash.new h}
-# pp hits

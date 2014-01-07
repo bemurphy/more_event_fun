@@ -1,7 +1,6 @@
-require "./event"
 require "elasticsearch"
-require "hashie"
 require "date"
+require "./event"
 
 def define_handler(class_name, &block)
   handler_class = Object.const_set(class_name.to_s, Class.new)
@@ -18,7 +17,7 @@ define_handler :SegmentIOHandler do
   end
 end
 
-class CommentSpamHandler
+class CommentIndexHandler
   include Event::Handler
 
   subscribe "comment.flag_spam", :spam
@@ -56,5 +55,5 @@ class CommentSpamHandler
   end
 end
 
-CommentSpamHandler.start
+CommentIndexHandler.start
 sleep 86_400

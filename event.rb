@@ -1,6 +1,6 @@
-# require "redis"
-require "json"
 require "bunny"
+require "hashie"
+require "json"
 
 module Event
   class Client
@@ -32,7 +32,6 @@ module Event
   class HandlerCollection
     def initialize(topic_name)
       @events = Event::Client.new(topic_name)
-      # @writer = Event::Client.new(channel_name)
 
       @handlers = Hash.new do |h, k|
         h[k] = []
@@ -48,17 +47,10 @@ module Event
     end
 
     def process(data)
-      unhandled = true
-
       props = Hashie::Mash.new(data["properties"])
       handlers = @handlers[data["event_name"].to_s]
       handlers.each do |handler|
-        unhandled = false
         handler.call props
-      end
-
-      if unhandled
-        # @writer.write("unhandled", data)
       end
     end
 
